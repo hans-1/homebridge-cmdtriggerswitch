@@ -21,6 +21,16 @@
                 "type": "number",
                 "default": 1000,
                 "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
+            },
+            "onCmd": {
+                "title": "On Command",
+                "type": "string",
+                "description": "CLI command that is executed when the switch state changes from off to on."
+            },
+            "offCmd": {
+                "title": "Off Command",
+                "type": "string",
+                "description": "CLI command that is executed when the switch state changes from on to off."
             }
         }
     }

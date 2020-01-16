@@ -1,6 +1,7 @@
 "use strict";
 
 var Service, Characteristic, HomebridgeAPI;
+var exec = require('child_process').exec;
 
 module.exports = function(homebridge) {
 
@@ -16,6 +17,8 @@ function CmdTriggerSwitch(log, config) {
   this.stateful = config.stateful;
   this.delay = config.delay ? config.delay : 1000;
   this.timeout = -1;		
+  this.onCmd = config.onCmd;
+  this.offCmd = config.offCmd;
   this._service = new Service.Switch(this.name);
   
   this.cacheDirectory = HomebridgeAPI.user.persistPath();
@@ -55,6 +58,14 @@ CmdTriggerSwitch.prototype._setOn = function(on, callback) {
         clearTimeout(this.timeout);
       }
     }
+  }
+
+  if (on) {
+    this.log("Executing ON command: '" + this.onCmd + "'");
+    exec(this.onCmd);
+  } else {
+    this.log("Executing OFF command: '" + this.offCmd + "'");
+    exec(this.offCmd);
   }
 
   callback();
