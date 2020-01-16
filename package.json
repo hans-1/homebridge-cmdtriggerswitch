@@ -1,5 +1,5 @@
 {
-    "name": "homebridge-cmdswitch",
+    "name": "homebridge-cmdtriggerswitch",
     "version": "0.1.0",
     "description": "Switch that triggers a command for Homebridge",
     "license": "ISC",
@@ -8,10 +8,10 @@
     ],
     "repository": {
       "type": "git",
-      "url": "git://github.com/hans-1/homebridge-cmdswitch.git"
+      "url": "git://github.com/hans-1/homebridge-cmdtriggerswitch.git"
     },
     "bugs": {
-      "url": "http://github.com/hans-1/homebridge-cmdswitch/issues"
+      "url": "http://github.com/hans-1/homebridge-cmdtriggerswitch/issues"
     },
     "engines": {
       "node": ">=0.12.0",

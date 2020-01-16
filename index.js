@@ -7,10 +7,10 @@ module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   HomebridgeAPI = homebridge;
-  homebridge.registerAccessory("homebridge-cmdswitch", "CmdSwitch", CmdSwitch);
+  homebridge.registerAccessory("homebridge-cmdtriggerswitch", "CmdTriggerSwitch", CmdTriggerSwitch);
 }
 
-function CmdSwitch(log, config) {
+function CmdTriggerSwitch(log, config) {
   this.log = log;
   this.name = config.name;
   this.stateful = config.stateful;
@@ -36,11 +36,11 @@ function CmdSwitch(log, config) {
   }
 }
 
-CmdSwitch.prototype.getServices = function() {
+CmdTriggerSwitch.prototype.getServices = function() {
   return [this._service];
 }
 
-CmdSwitch.prototype._setOn = function(on, callback) {
+CmdTriggerSwitch.prototype._setOn = function(on, callback) {
 
   this.log("Setting switch to " + on);
 
