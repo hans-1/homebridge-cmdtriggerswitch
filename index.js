@@ -61,11 +61,15 @@ CmdTriggerSwitch.prototype._setOn = function(on, callback) {
   }
 
   if (on) {
-    this.log("Executing ON command: '" + this.onCmd + "'");
-    exec(this.onCmd);
+    if (this.onCmd !== undefined) {
+      this.log("Executing ON command: '" + this.onCmd + "'");
+      exec(this.onCmd);
+    }
   } else {
-    this.log("Executing OFF command: '" + this.offCmd + "'");
-    exec(this.offCmd);
+    if (this.offCmd !== undefined) {
+      this.log("Executing OFF command: '" + this.offCmd + "'");
+      exec(this.offCmd);
+    }
   }
 
   callback();
