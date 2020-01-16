@@ -14,7 +14,8 @@ function CmdTriggerSwitch(log, config) {
   this.log = log;
   this.name = config.name;
   this.stateful = config.stateful;
-  this.delay = config.delay ? config.delay : 1000;		
+  this.delay = config.delay ? config.delay : 1000;
+  this.timeout = -1;		
   this._service = new Service.Switch(this.name);
   
   this.cacheDirectory = HomebridgeAPI.user.persistPath();
@@ -46,10 +47,14 @@ CmdTriggerSwitch.prototype._setOn = function(on, callback) {
 	  this.storage.setItemSync(this.name, on);
   } else {
     if (on) {
-      setTimeout(function() {
+      this.timeout = setTimeout(function() {
         this._service.setCharacteristic(Characteristic.On, false);
       }.bind(this), this.delay);
-    } 
+    } else {
+      if (this.timeout !== -1) {
+        clearTimeout(this.timeout);
+      }
+    }
   }
 
   callback();
