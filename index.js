@@ -24,15 +24,13 @@ function CmdTriggerSwitch(log, config) {
   this._service.getCharacteristic(Characteristic.On)
     .on('set', this._setOn.bind(this));
 
-  if (this.reverse) this._service.setCharacteristic(Characteristic.On, true);
-
   if (this.stateful) {
-	var cachedState = this.storage.getItemSync(this.name);
-	if((cachedState === undefined) || (cachedState === false)) {
-		this._service.setCharacteristic(Characteristic.On, false);
-	} else {
-		this._service.setCharacteristic(Characteristic.On, true);
-	}
+    var cachedState = this.storage.getItemSync(this.name);
+    if((cachedState === undefined) || (cachedState === false)) {
+      this._service.setCharacteristic(Characteristic.On, false);
+    } else {
+      this._service.setCharacteristic(Characteristic.On, true);
+    }
   }
 }
 
@@ -51,9 +49,7 @@ CmdTriggerSwitch.prototype._setOn = function(on, callback) {
       setTimeout(function() {
         this._service.setCharacteristic(Characteristic.On, false);
       }.bind(this), this.delay);
-    } else {
-      this.storage.setItemSync(this.name, on);
-    }
+    } 
   }
 
   callback();
