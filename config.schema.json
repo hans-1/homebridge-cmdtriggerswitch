@@ -1,0 +1,27 @@
+{
+    "pluginAlias": "CmdSwitch",
+    "pluginType": "accessory",
+    "singular": false,
+    "schema": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "title": "Name",
+                "type": "string",
+                "required": true
+            },
+            "stateful": {
+                "title": "Stateful",
+                "type": "boolean",
+                "default": false,
+                "description": "The switch remains on instead of being automatically turned off."
+            },
+            "delay": {
+                "title": "Delay",
+                "type": "number",
+                "default": 1000,
+                "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
+            }
+        }
+    }
+}
