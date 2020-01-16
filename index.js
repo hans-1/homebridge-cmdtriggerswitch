@@ -44,19 +44,17 @@ CmdTriggerSwitch.prototype._setOn = function(on, callback) {
 
   this.log("Setting switch to " + on);
 
-  if (on && !this.stateful) {
-    setTimeout(function() {
-      this._service.setCharacteristic(Characteristic.On, false);
-    }.bind(this), this.delay);
-  } else if (!on && !this.stateful) {
-    setTimeout(function() {
-      this._service.setCharacteristic(Characteristic.On, true);
-    }.bind(this), this.delay);
-  }
-  
   if (this.stateful) {
-	this.storage.setItemSync(this.name, on);
+	  this.storage.setItemSync(this.name, on);
+  } else {
+    if (on) {
+      setTimeout(function() {
+        this._service.setCharacteristic(Characteristic.On, false);
+      }.bind(this), this.delay);
+    } else {
+      this.storage.setItemSync(this.name, on);
+    }
   }
-  
+
   callback();
 }
