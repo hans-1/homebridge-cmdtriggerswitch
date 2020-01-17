@@ -1,23 +1,23 @@
 {
-    "name": "homebridge-cmdtriggerswitch",
-    "version": "0.4.0",
-    "description": "Switch that triggers a command for Homebridge",
-    "license": "ISC",
-    "keywords": [
-      "homebridge-plugin"
-    ],
-    "repository": {
-      "type": "git",
-      "url": "git://github.com/hans-1/homebridge-cmdtriggerswitch.git"
-    },
-    "bugs": {
-      "url": "http://github.com/hans-1/homebridge-cmdtriggerswitch/issues"
-    },
-    "engines": {
-      "node": ">=0.12.0",
-      "homebridge": ">=0.2.0"
-    },
-    "dependencies": {
-      "node-persist": "^2.1.0"
-    }
+  "name": "homebridge-cmdtriggerswitch",
+  "version": "0.4.0",
+  "description": "Switch that triggers a command for Homebridge",
+  "license": "ISC",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hans-1/homebridge-cmdtriggerswitch.git"
+  },
+  "bugs": {
+    "url": "http://github.com/hans-1/homebridge-cmdtriggerswitch/issues"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "dependencies": {
+    "node-persist": "^2.1.0"
   }
+}

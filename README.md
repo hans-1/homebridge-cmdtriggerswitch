@@ -1,5 +1,16 @@
 # homebridge-cmdtriggerswitch
 
+[![npm](https://img.shields.io/npm/v/homebridge-cmdtriggerswitch.svg)](https://www.npmjs.com/package/homebridge-cmdtriggerswitch)
+[![npm](https://img.shields.io/npm/dt/homebridge-cmdtriggerswitch.svg)](https://www.npmjs.com/package/homebridge-cmdtriggerswitch)
+
+A fake switch for Homebridge that triggers a CLI command when turned on or off.
+
+## Installation
+
+1. Install Homebridge, see https://homebridge.io/.
+2. Install this plugin using: `npm install --save homebridge-cmdtriggerswitch@latest`.
+3. Update your Homebridge `config.json` using the sample below.
+
 Example config.json with a stateful switch:
 ```
     "accessories": [
@@ -20,8 +31,8 @@ Example config.json with a (simulated) stateless switch:
             "accessory": "CmdTriggerSwitch",
             "name": "Switch-01,
             "stateful": false,
-            "onCmd": "Switch-01 is now OM",
-            "offCmd": "Switch-01 is now OFF",
+            "onCmd": "echo Switch-01 is now OM",
+            "offCmd": "echo Switch-01 is now OFF",
             "delay": 1000
         }
     ]
@@ -37,10 +48,10 @@ The default behavior of a statefull CmdTriggerSwitch is that it remains on and m
     "accessories": [
         {
             "accessory": "CmdTriggerSwitch",
-            "name": "Heating,
+            "name": "Switch-02,
             "stateful": true,
-            "onCmd": "echo Heating ON",
-            "offCmd": "echo Heating OFF"
+            "onCmd": "echo Switch-02 is now OM",
+            "offCmd": "echo Switch-02 is now OFF"
         }
     ]
 ```
