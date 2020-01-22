@@ -13,14 +13,9 @@
             "stateful": {
                 "title": "Stateful",
                 "type": "boolean",
+                "required": true,
                 "default": false,
-                "description": "The switch remains on instead of being automatically turned off."
-            },
-            "delay": {
-                "title": "Delay",
-                "type": "number",
-                "default": 1000,
-                "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
+                "description": "If true, the switch remains on instead of being automatically turned off."
             },
             "onCmd": {
                 "title": "On Command",
@@ -31,6 +26,68 @@
                 "title": "Off Command",
                 "type": "string",
                 "description": "CLI command that is executed when the switch state changes from on to off."
+            },
+            "delay": {
+                "title": "Delay",
+                "type": "number",
+                "description": "Timeout value in the unit specified by the argument 'delayUnit' after which the switch turns off itself. If not specified, defaults to 100 units. Only evaluated for stateless switches. If interactiveDelay is specified, this specifies the initial value."
+            },
+            "delayUnit": {
+                "title": "Delay Unit",
+                "type": "string",
+                "oneOf": [
+                    {
+                      "title": "Milliseconds",
+                      "enum": [
+                        "ms"
+                      ]
+                    },
+                    {
+                      "title": "Seconds",
+                      "enum": [
+                        "s"
+                      ]
+                    },
+                    {
+                      "title": "Minutes",
+                      "enum": [
+                        "min"
+                      ]
+                    }
+                  ],
+                "description": "Unit, in which the values for 'delay' are specified. Defaults to milliseconds (ms)."
+            },
+            "interactiveDelaySettings": {
+                "title": "Interactive Delay Settings",
+                "type": "object",
+                "expandable": true,
+                "properties": {
+                    "interactiveDelay": {
+                        "title": "Interactive Delay",
+                        "type": "boolean",
+                        "description": "Flag to indicate if the timeout value for a stateless switch can be directly changed in a supported HomeKit app like 'Eve for HomeKit'. Defaults to false."
+                    },
+                    "interactiveDelayLabel": {
+                        "title": "Interactive Delay Label",
+                        "type": "string",
+                        "description": "Specifies the label that is used to display the interactive delay value. Defaults to 'Delay'."
+                    },
+                    "delayMin": {
+                        "title": "Minimum Delay",
+                        "type": "number",
+                        "description": "Minimum timeout value that can be set interactively for a stateless switch. Defaults to 100 units."
+                    },
+                    "delayMax": {
+                        "title": "Maximum Delay",
+                        "type": "number",
+                        "description": "Maximum timeout value that can be set interactively for a stateless switch. Defaults to 1000 units."
+                    },
+                    "delayStep": {
+                        "title": "Delay Step",
+                        "type": "number",
+                        "description": "Step value used to increment or decrement the timeout value that can be set interactively for a stateless switch. Defaults to 100 units."
+                    }
+                } 
             }
         }
     }
