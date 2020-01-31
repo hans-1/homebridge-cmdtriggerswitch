@@ -78,6 +78,8 @@ The argument 'onCmd' is used to specifiy the CLI command that is executed when t
 
 The default unit for the argument 'delay' is milliseconds. You can change this by specifing the argument 'delayUnit' which accepts the values 'ms' for milliseconds, 's' for seconds and 'min' for minutes.
 
+After a reboot of Homebridge, a stateless switch checks if there is a remaining delay-time and stays on for this timespan. This is specifically useful for stateless switches with high delay values.
+
 ### Interactive Delay
 
 The timeout value for a stateless switch can be directly changed in a supported HomeKit app like 'Eve for HomeKit', if the flag 'interactiveDelayLabel' is set to true.  Unfortunately, this is not possible in the official Apple Home app as it does not support custom characteristic. Still, it can be used in the official Apple Home app.

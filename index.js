@@ -6,7 +6,6 @@ var inherits = require('util').inherits;
 
 
 module.exports = function(homebridge) {
-
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   HomebridgeAPI = homebridge;
@@ -19,6 +18,28 @@ function keepIntInRange(num, min, max){
 }
 
 function CmdTriggerSwitch(log, config) {
+  this.log = log;
+  this.timeout = -1;		
+  this.restoredFromCacheState = false;
+  this.remainingDelay = 0;
+  
+  // Setup Configuration
+  //
+  this.setupConfig(config);
+  
+  // Persistent Storage
+  //
+  this.cacheDirectory = HomebridgeAPI.user.persistPath();
+  this.storage = require('node-persist');
+  this.storage.initSync({dir:this.cacheDirectory, forgiveParseErrors: true});
+  
+  // Setup Services
+  //
+  this.createSwitchService();
+  this.createAccessoryInformationService();
+}
+
+CmdTriggerSwitch.prototype.setupConfig = function(config) {
   this.name = config.name;
   this.onCmd = config.onCmd;
   this.offCmd = config.offCmd;
@@ -33,9 +54,6 @@ function CmdTriggerSwitch(log, config) {
     this.delayMax = config.interactiveDelaySettings.delayMax ? parseInt(config.interactiveDelaySettings.delayMax) : 1000;
     this.delayStep = config.interactiveDelaySettings.delayStep ? parseInt(config.interactiveDelaySettings.delayStep) : 100;
   }
-
-  this.timeout = -1;		
-  this.log = log;
 
   if (this.delayMax <= this.delayMin) {
     throw new Error('Invalid configuration: delayMin must be smaller than delayMax');
@@ -60,18 +78,9 @@ function CmdTriggerSwitch(log, config) {
       throw new Error('Invalid configuration: Unknown delayUnit (must be "ms", "s" or "min")');
       break;
   }
-  
-  
-  // Persistent Storage
-  //
+}
 
-  this.cacheDirectory = HomebridgeAPI.user.persistPath();
-  this.storage = require('node-persist');
-  this.storage.initSync({dir:this.cacheDirectory, forgiveParseErrors: true});
-  
-  // Switch service
-  //
-
+CmdTriggerSwitch.prototype.createSwitchService = function() {
   this.switchService = new Service.Switch(this.name);
 
   this.switchService.getCharacteristic(Characteristic.On)
@@ -115,20 +124,32 @@ function CmdTriggerSwitch(log, config) {
   if (this.stateful) {
     const cachedState = this.storage.getItemSync(this.name);
     if((cachedState === undefined) || (cachedState === false)) {
+      if (cachedState === false) {
+        this.restoredFromCacheState = true;
+      }
       this.switchService.setCharacteristic(Characteristic.On, false);
     } else {
+      this.restoredFromCacheState = true;
       this.switchService.setCharacteristic(Characteristic.On, true);
     }
+  } else {
+    const cachedStartTime = this.storage.getItemSync(`${this.name} - startTime`);
+    if (cachedStartTime !== undefined) {
+      const diffTime = Date.now() - cachedStartTime;
+      this.log('diffTime: ' + diffTime/1000 + 's');
+      if (diffTime > 0 && diffTime < this.delay*this.delayFactor) {
+        this.remainingDelay = this.delay*this.delayFactor - diffTime;
+        this.switchService.setCharacteristic(Characteristic.On, true);
+      }  
+    } 
   }
+}
 
-  // Accessory Information Service
-  //
-
+CmdTriggerSwitch.prototype.createAccessoryInformationService = function() {
   this.accessoryInformationService =  new Service.AccessoryInformation()
     .setCharacteristic(Characteristic.Name, this.name)
     .setCharacteristic(Characteristic.Manufacturer, 'hans-1')
     .setCharacteristic(Characteristic.Model, 'Command Trigger Switch');
-
 }
 
 CmdTriggerSwitch.prototype.getServices = function() {
@@ -143,10 +164,15 @@ CmdTriggerSwitch.prototype.switchSetOn = function(on, callback) {
 	  this.storage.setItemSync(this.name, on);
   } else {
     if (on) {
-      // this.log("Delay in ms: " + this.delay*this.delayFactor);
+      let delayMs = this.remainingDelay;
+      if (delayMs <= 0) {
+        delayMs = this.delay*this.delayFactor;
+        this.storage.setItemSync(`${this.name} - startTime`, Date.now());
+      }
+      this.log("Delay in ms: " + delayMs);
       this.timeout = setTimeout(function() {
         this.switchService.setCharacteristic(Characteristic.On, false);
-      }.bind(this), this.delay*this.delayFactor);
+      }.bind(this), delayMs);
     } else {
       if (this.timeout !== -1) {
         clearTimeout(this.timeout);
@@ -154,15 +180,23 @@ CmdTriggerSwitch.prototype.switchSetOn = function(on, callback) {
     }
   }
 
-  if (on) {
-    if (this.onCmd !== undefined) {
-      this.log("Executing ON command: '" + this.onCmd + "'");
-      exec(this.onCmd);
-    }
+  if (this.restoredFromCacheState) {
+    this.log(`Restored switch state to ${on} after restart.`);
+    this.restoredFromCacheState = false;
+  } else if (this.remainingDelay > 0) {
+    this.log(`Restored switch state to ${on} after restart, remaining delay ${this.remainingDelay}ms`);
+    this.remainingDelay = 0;
   } else {
-    if (this.offCmd !== undefined) {
-      this.log("Executing OFF command: '" + this.offCmd + "'");
-      exec(this.offCmd);
+    if (on) {
+      if (this.onCmd !== undefined) {
+        this.log("Executing ON command: '" + this.onCmd + "'");
+        exec(this.onCmd);
+      }
+    } else {
+      if (this.offCmd !== undefined) {
+        this.log("Executing OFF command: '" + this.offCmd + "'");
+        exec(this.offCmd);
+      }
     }
   }
 
