@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented in this file. This project uses [Semantic Versioning](https://semver.org/).
 
+## 1.3.0 (2026-05-24)
+
+### Changed
+
+- Modernized Homebridge characteristic handlers by replacing legacy `get`/`set` callbacks with `onGet`/`onSet`.
+- Migrated persisted state handling to async `node-persist` APIs.
+- Restored cached switch state using characteristic updates without triggering configured commands.
+- Added automated Jest tests for switch behavior and persistence handling.
+
+### Fixed
+
+- Improved integer range handling for invalid delay values.
+
+Thanks to @fascpt for providing the Homebridge v2 compatibility patch in PR #10.
+
 ## 1.2.0 (2020-01-31)
 
 ### Notable Changes
