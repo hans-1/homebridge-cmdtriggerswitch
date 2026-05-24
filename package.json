@@ -14,10 +14,16 @@
     "url": "http://github.com/hans-1/homebridge-cmdtriggerswitch/issues"
   },
   "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
+    "node": "^18.15.0 || ^20.7.0 || ^22.0.0 || ^24.0.0",
+    "homebridge": "^1.6.0 || >=2.0.0-beta.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
   },
   "dependencies": {
-    "node-persist": "^2.1.0"
+    "node-persist": "^4.0.0"
   }
 }
